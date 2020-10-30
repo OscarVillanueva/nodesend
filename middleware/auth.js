@@ -27,4 +27,10 @@ module.exports = (req, res, next) => {
         }
 
     }
+    else {
+        
+        req.user = null
+        return next()
+        
+    }
 }
