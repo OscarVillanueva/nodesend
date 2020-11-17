@@ -18,7 +18,7 @@ exports.authenticateUser = async ( req, res, next ) => {
    
     // Si no existe el usuario
     if ( !user ) {
-        res.status(401).json({ msg: "El usuario no existe" })
+        res.status(401).json({ msg: "El usuario o contraseña son incorrectos" })
 
         // Para evitar que se siga ejecutando
         return next()
@@ -41,7 +41,7 @@ exports.authenticateUser = async ( req, res, next ) => {
 
     }
     else {
-        res.status(401).json({ msg: "Password Incorrecto" });
+        res.status(401).json({ msg: "El usuario o contraseña son incorrectos" });
         return next()
     }
 
