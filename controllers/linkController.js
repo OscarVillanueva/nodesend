@@ -11,11 +11,11 @@ exports.newLink = async (req, res, next) => {
     if ( !errors.isEmpty() ) return res.status(400).json({errors:  errors.array()})
 
     // Crear el objeto de enlace
-    const { file_name } = req.body
+    const { file_name, name } = req.body
 
     const link = new Links()
     link.url = shorid.generate()
-    link.name = shorid.generate()
+    link.name = name
     link.file_name = file_name
 
     // si el usuario esta autenticado
