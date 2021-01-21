@@ -73,6 +73,8 @@ exports.getLink = async ( req, res, next ) => {
     // si el enlace existe
     res.status(200).json({ file: link.name })
 
+    return 
+
     // Si las descargas === 1 - Borrar la entrada y el archivo
     if ( downloads === 1) {
 
@@ -94,4 +96,18 @@ exports.getLink = async ( req, res, next ) => {
 
     }
     
+}
+
+// Obtiene un listado de todos los enlaces
+exports.allLinks = async ( req, res, next ) => {
+
+    try {
+
+        const links = await Links.find({}).select("url")
+        res.json({ links })
+        
+    } catch (error) {
+        console.log(error);
+    }
+
 }

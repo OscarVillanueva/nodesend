@@ -14,6 +14,10 @@ router.post("/",
     linkController.newLink
 )
 
+router.get("/",
+    linkController.allLinks
+)
+
 router.get("/:url",
     linkController.getLink,
     filesController.deleteFile
