@@ -8,4 +8,9 @@ router.post("/",
     filesController.uploadFile
 )
 
+router.get("/:file",
+    filesController.downloadFile,
+    filesController.deleteFile
+)
+
 module.exports = router

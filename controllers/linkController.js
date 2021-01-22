@@ -73,29 +73,7 @@ exports.getLink = async ( req, res, next ) => {
     // si el enlace existe
     res.status(200).json({ file: link.name })
 
-    return 
-
-    // Si las descargas === 1 - Borrar la entrada y el archivo
-    if ( downloads === 1) {
-
-        // Eliminar el archivo
-        req.file = name
-        
-        // Eliminar la entrada de la base de datos
-        await Links.findOneAndRemove(req.params.url)
-        
-        // Pasamos al siguiente controlador
-        next() 
-
-    }
-    else {
-
-        // Si las descargas > 1 - Restar 1
-        link.downloads = link.downloads - 1
-        await link.save()
-
-    }
-    
+    next()
 }
 
 // Obtiene un listado de todos los enlaces
