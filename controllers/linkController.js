@@ -21,7 +21,7 @@ exports.newLink = async (req, res, next) => {
     // si el usuario esta autenticado
     if ( req.user ) {
 
-        const { password, downloads } = req.body
+        const { password, downloads, author } = req.body
 
         // Asignar a enlace en número de descargas
         link.downloads = downloads ? downloads : 1;
@@ -34,9 +34,8 @@ exports.newLink = async (req, res, next) => {
 
         }
 
-
         // Asignar el autor
-        link.author = req.user.id
+        link.author = author
     }
 
     //  Almacenar en la base de datos
@@ -63,7 +62,6 @@ exports.getLink = async ( req, res, next ) => {
 
     // Verificar si existe el archivo
     const link = await Links.findOne({ url })
-    const { downloads, name } = link
 
     if ( !link ) {
         res.status(400).json({ msg: "Ese enlace no existe" })
@@ -71,7 +69,7 @@ exports.getLink = async ( req, res, next ) => {
     }
 
     // si el enlace existe
-    res.status(200).json({ file: link.name })
+    res.status(200).json({ file: link.name, password: false })
 
     next()
 }
@@ -87,5 +85,52 @@ exports.allLinks = async ( req, res, next ) => {
     } catch (error) {
         console.log(error);
     }
+
+}
+
+// Verifica si el password del enlace es correcto
+exports.checkPassword = async ( req, res, next ) => {
+
+    const { url } = req.params
+    const { password } = req.body
+
+    // Verificar si existe el archivo
+    const link = await Links.findOne({ url })
+
+    if ( !link ) {
+        res.status(400).json({ msg: "Ese enlace no existe" })
+        return next()
+    }
+
+    // Verificar la contraseña
+    if ( bcrypt.compareSync( password, link.password ) ){
+        
+        // Permitir la descarga
+        next()
+
+    }
+    else return res.status(401).json({ msg: "Contraseña incorrecta" })
+
+
+}
+
+// Retorna si el enlace tiene password o no
+exports.hasPassword = async ( req, res, next ) => {
+
+    const { url } = req.params
+
+    // Verificar si existe el archivo
+    const link = await Links.findOne({ url })
+
+    if ( !link ) {
+        res.status(400).json({ msg: "Ese enlace no existe" })
+        return next()
+    }
+
+    if ( link.password ) {
+        return res.json({ password: true, link: link.url })
+    }
+
+    next()
 
 }

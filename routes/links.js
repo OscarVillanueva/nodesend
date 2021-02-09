@@ -3,7 +3,6 @@ const router = express.Router()
 const { check } = require("express-validator")
 const auth = require("../middleware/auth")
 const linkController = require("../controllers/linkController")
-const filesController = require("../controllers/filesController")
 
 router.post("/",
     [
@@ -19,6 +18,12 @@ router.get("/",
 )
 
 router.get("/:url",
+    linkController.hasPassword,
+    linkController.getLink,
+)
+
+router.post("/:url",
+    linkController.checkPassword,
     linkController.getLink,
 )
 
